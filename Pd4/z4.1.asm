@@ -1,0 +1,11 @@
+	LJMP	START
+	ORG	100H
+START:
+	LCALL	LCD_CLR		
+	MOV	R0, #00000111B	;maska
+	MOV	A, #111
+	ANL	A, R0	;iloczyn maski i liczby
+	LCALL	WRITE_HEX	
+
+STOP:
+	SJMP	STOP
