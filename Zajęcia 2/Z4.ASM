@@ -1,0 +1,76 @@
+	LJMP START
+
+	ORG 100H
+
+START:	
+
+ADR1	EQU 100
+
+ADR2	EQU 101
+
+	LCALL LCD_CLR
+
+	
+	MOV R0, #ADR1
+
+	LCALL GET_NUM
+
+	LCALL BCD_HEX
+
+	MOV A, #'+'
+
+	LCALL WRITE_DATA
+
+	MOV R0, #ADR2
+
+	LCALL GET_NUM
+
+	LCALL BCD_HEX
+
+	MOV A, #'='
+	
+	LCALL WRITE_DATA
+
+
+	MOV R0, #ADR1
+
+	MOV R1, #ADR2
+
+	MOV A, @R0
+
+	ADD A, @R1
+
+	MOV @R0, A
+
+	
+
+	INC R0
+
+	INC R1
+
+
+	MOV A, @R0
+
+	ADDC A, @R1
+
+	MOV @R0, A
+
+	DEC R0
+
+	LCALL HEX_BCD
+
+	INC R0
+
+	MOV A, @R0
+
+	LCALL WRITE_HEX
+
+	DEC R0
+
+	MOV Q, @R0
+
+	LCALL WRITE_HEX
+
+STOP:
+
+	SJMP STOP

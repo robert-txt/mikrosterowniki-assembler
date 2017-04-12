@@ -1,0 +1,144 @@
+     1        0064      MEM	EQU	100
+     2                  ;--------------------------------------
+     3  0000: 02 01 00  	LJMP	START
+     4  0100:           	ORG	100H
+     5  0100:           START:
+     6                  
+     7                  
+     8  0100: 12 81 0C  	LCALL	LCD_CLR
+     9                  
+    10  0103: 78 64     	MOV	R0,#MEM
+    11                  
+    12  0105:           L1:
+    13  0105: 12 81 1C  	LCALL	WAIT_KEY
+    14  0108: 60 FB     	JZ	L1
+    15  010A: B4 0A 00  	CJNE	A,#10,L2
+    16  010D:           L2:
+    17  010D: 50 F6     	JNC	L1
+    18                  
+    19  010F: 90 01 A1  	MOV	DPTR,#CENY
+    20  0112: 12 01 B1  	LCALL	POBIERZ_DANE
+    21  0115: FD        	MOV	R5,A
+    22  0116: F5 64     	MOV	MEM,A
+    23  0118: 75 65 00  	MOV	MEM+1,#0
+    24  011B: 12 81 22  	LCALL	HEX_BCD
+    25  011E: E6        	MOV	A,@R0
+    26  011F: 12 81 04  	LCALL	WRITE_HEX
+    27                  
+    28  0122: 74 7C     	MOV	A,#'|'
+    29  0124: 12 81 02  	LCALL	WRITE_DATA
+    30                  
+    31  0127: 79 01     	MOV	R1,#1
+    32  0129: 90 01 AB  	MOV	DPTR,#MONETY
+    33  012C: 75 64 00  	MOV	MEM,#0
+    34  012F: 75 65 00  	MOV	MEM+1,#0
+    35                  
+    36  0132:           LOOP1:	
+    37                  
+    38  0132: E9        	MOV	A,R1
+    39  0133: 12 01 B1  	LCALL	POBIERZ_DANE
+    40  0136: FA        	MOV	R2,A
+    41  0137:           L3:	
+    42  0137: 12 81 1C  	LCALL	WAIT_KEY
+    43  013A: FB        	MOV	R3,A
+    44  013B: B4 0A 00  	CJNE	A,#10,L4
+    45  013E:           L4:
+    46  013E: 50 F7     	JNC	L3
+    47  0140: 24 30     	ADD	A,#'0'
+    48  0142: 12 81 02  	LCALL	WRITE_DATA
+    49                  	
+    50  0145: EA        	MOV	A,R2
+    51  0146: 8B F0     	MOV	B,R3
+    52  0148: A4        	MUL	AB
+    53                  
+    54  0149: 26        	ADD	A,@R0
+    55  014A: F6        	MOV	@R0,A
+    56  014B: E5 F0     	MOV	A,B
+    57  014D: 08        	INC	R0
+    58  014E: 36        	ADDC	A,@R0
+    59  014F: F6        	MOV	@R0,A
+    60  0150: 18        	DEC	R0
+    61                  
+    62  0151: 09        	INC	R1
+    63  0152: B9 07 DD  	CJNE	R1,#7,LOOP1
+    64                  
+    65                  
+    66  0155: 74 7C     	MOV	A,#'|'
+    67  0157: 12 81 02  	LCALL	WRITE_DATA
+    68                  
+    69                  
+    70                  
+    71  015A: C3        	CLR	C
+    72  015B: E6        	MOV	A,@R0
+    73  015C: 9D        	SUBB	A,R5
+    74  015D: F6        	MOV	@R0,A
+    75  015E: 08        	INC	R0
+    76  015F: E6        	MOV	A,@R0
+    77  0160: 94 00     	SUBB	A,#0
+    78  0162: F6        	MOV	@R0,A
+    79  0163: 18        	DEC	R0
+    80                  
+    81                  
+    82  0164: 12 81 22  	LCALL	HEX_BCD
+    83  0167: 08        	INC	R0
+    84  0168: E6        	MOV	A,@R0
+    85  0169: 12 81 04  	LCALL	WRITE_HEX
+    86  016C: 18        	DEC	R0
+    87  016D: E6        	MOV	A,@R0
+    88  016E: 12 81 04  	LCALL	WRITE_HEX
+    89                  
+    90  0171: 74 7C     	MOV	A,#'|'
+    91  0173: 12 81 02  	LCALL	WRITE_DATA
+    92  0176: 74 20     	MOV	A,#' '
+    93  0178: 12 81 02  	LCALL	WRITE_DATA
+    94                  
+    95  017B: 12 81 20  	LCALL	BCD_HEX
+    96                  
+    97                  
+    98                  
+    99  017E: 75 F0 32  	MOV B,#50
+   100  0181: 12 81 28  	LCALL	DIV_2_1
+   101  0184: FE        	MOV R6, A
+   102  0185: E6        	MOV A,@R0
+   103  0186: 12 81 04  	LCALL WRITE_HEX
+   104  0189: 90 01 AB  	MOV DPTR,#MONETY
+   105  018C: 79 02     	MOV R1, #2
+   106                  
+   107  018E:           LOOP2:	
+   108  018E: E9        	MOV A, R1
+   109  018F: 12 01 B1  	LCALL POBIERZ_DANE
+   110  0192: F5 F0     	MOV B, A
+   111  0194: EE        	MOV A, R6
+   112  0195: 84        	DIV AB
+   113  0196: AE F0     	MOV R6, B
+   114  0198: 12 81 04  	LCALL WRITE_HEX
+   115  019B: 09        	INC R1
+   116  019C: B9 07 EF  	CJNE R1, #7, LOOP2
+   117                  	
+   118                  		
+   119                  
+   120  019F:           STOP:
+   121  019F: 80 FE     	SJMP	STOP
+   122                  
+   123                  
+   124                  ;----------------------------------
+   125                  
+   126  01A1:           CENY:
+   127  01A1: 17 15 0B  	DB	23, 21, 11, 16, 16, 18, 12, 33, 36, 28
+        01A4: 10 10 12 
+        01A7: 0C 21 24 
+        01AA: 1C 
+   128                  
+   129  01AB: 32 14 0A  MONETY:	DB	50, 20, 10, 5, 2, 1
+        01AE: 05 02 01 
+   130                  
+   131                  ;----------------------------------
+   132                  
+   133                  
+   134  01B1:           POBIERZ_DANE:
+   135  01B1: 14        	DEC	A
+   136  01B2: 93        	MOVC	A,@A+DPTR
+   137  01B3: 22        	RET
+   138                  
+   139                  ;----------------------------------
+   140                  

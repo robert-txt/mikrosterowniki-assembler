@@ -1,0 +1,27 @@
+	LJMP START
+
+	ORG 100H
+
+START:	
+
+	LCALL WAIT_KEY
+
+	CLR P1.7
+	
+	JB ACC.0, L1
+
+	MOV A,#1
+
+	SJMP L2
+
+L1:	
+
+	MOV A,#10
+
+L2:
+
+	LCALL DELAY_100MS
+
+	SETB P1.7
+
+	SJMP START

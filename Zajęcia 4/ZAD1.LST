@@ -1,0 +1,68 @@
+     1        0064      MEM1	EQU	100
+     2        006E      MEM2	EQU	110
+     3        0068      MEM12	EQU	104
+     4                  
+     5  0000: 02 01 00  	LJMP	START
+     6  0100:           	ORG	100H
+     7  0100:           START:
+     8                  
+     9  0100: 12 81 0C  	LCALL	LCD_CLR
+    10  0103: 78 64     	MOV R0, #MEM1 ; ZAPISUJEMY DO RÓ¯NYCH OBSZRÓW PAMIÊCI LICZBY W FORMACIE BCD
+    11  0105: 12 81 1E  	LCALL GET_NUM
+    12  0108: 12 81 20  	LCALL BCD_HEX
+    13                  
+    14  010B: 78 6E     	MOV R0, #MEM2
+    15  010D: 12 81 1E  	LCALL GET_NUM
+    16  0110: 12 81 20  	LCALL BCD_HEX
+    17                  
+    18  0113: 79 64     	MOV R1, #MEM1
+    19  0115: E7        	MOV A, @R1
+    20  0116: 09        	INC R1
+    21  0117: 87 F0     	MOV B, @R1
+    22                  
+    23  0119: 12 81 24  	LCALL MUL_2_2
+    24                  
+    25  011C: 08        	INC R0
+    26  011D: 08        	INC R0
+    27  011E: 08        	INC R0
+    28                  
+    29  011F: E6        	MOV A, @R0
+    30  0120: 12 81 04  	LCALL WRITE_HEX
+    31  0123: 18        	DEC R0
+    32  0124: E6        	MOV A, @R0
+    33  0125: 12 81 04  	LCALL WRITE_HEX
+    34  0128: 18        	DEC R0
+    35  0129: E6        	MOV A, @R0
+    36  012A: 12 81 04  	LCALL WRITE_HEX
+    37  012D: 18        	DEC R0
+    38  012E: E6        	MOV A, @R0
+    39  012F: 12 81 04  	LCALL WRITE_HEX
+    40                  
+    41                  
+    42  0132: 75 F0 27  	MOV B, #27H
+    43  0135: 74 10     	MOV A, #10H
+    44                  
+    45  0137: 12 81 2A  	LCALL DIV_4_2
+    46                  
+    47  013A: 12 81 22  	LCALL HEX_BCD
+    48                  
+    49  013D: 78 68     	MOV R0, #MEM12
+    50  013F: 12 81 04  	LCALL WRITE_HEX
+    51  0142: 12 81 22  	LCALL HEX_BCD
+    52                  
+    53  0145: 78 65     	MOV R0, #MEM1+1
+    54  0147: E6        	MOV A, @R0
+    55  0148: 12 81 04  	LCALL WRITE_HEX
+    56  014B: 18        	DEC R0
+    57  014C: E6        	MOV A, @R0
+    58  014D: 12 81 04  	LCALL WRITE_HEX
+    59  0150: 78 69     	MOV R0, #MEM12+1
+    60  0152: E6        	MOV A, @R0
+    61  0153: 12 81 04  	LCALL WRITE_HEX
+    62  0156: 18        	DEC R0
+    63  0157: E6        	MOV A, @R0
+    64  0158: 12 81 04  	LCALL WRITE_HEX
+    65                  
+    66  015B:           STOP:
+    67                  
+    68  015B: 80 FE     	SJMP	STOP

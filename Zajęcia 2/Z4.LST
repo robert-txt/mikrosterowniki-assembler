@@ -1,0 +1,77 @@
+     1  0000: 02 01 00  	LJMP START
+     2                  
+     3  0100:           	ORG 100H
+     4                  
+     5  0100:           START:	
+     6                  
+     7        0064      ADR1	EQU 100
+     8                  
+     9        0065      ADR2	EQU 101
+    10                  
+    11  0100: 12 81 0C  	LCALL LCD_CLR
+    12                  
+    13                  	
+    14  0103: 78 64     	MOV R0, #ADR1
+    15                  
+    16  0105: 12 81 1E  	LCALL GET_NUM
+    17                  
+    18  0108: 12 81 20  	LCALL BCD_HEX
+    19                  
+    20  010B: 74 2B     	MOV A, #'+'
+    21                  
+    22  010D: 12 81 02  	LCALL WRITE_DATA
+    23                  
+    24  0110: 78 65     	MOV R0, #ADR2
+    25                  
+    26  0112: 12 81 1E  	LCALL GET_NUM
+    27                  
+    28  0115: 12 81 20  	LCALL BCD_HEX
+    29                  
+    30  0118: 74 3D     	MOV A, #'='
+    31                  	
+    32  011A: 12 81 02  	LCALL WRITE_DATA
+    33                  
+    34                  
+    35  011D: 78 64     	MOV R0, #ADR1
+    36                  
+    37  011F: 79 65     	MOV R1, #ADR2
+    38                  
+    39  0121: E6        	MOV A, @R0
+    40                  
+    41  0122: 27        	ADD A, @R1
+    42                  
+    43  0123: F6        	MOV @R0, A
+    44                  
+    45                  	
+    46                  
+    47  0124: 08        	INC R0
+    48                  
+    49  0125: 09        	INC R1
+    50                  
+    51                  
+    52  0126: E6        	MOV A, @R0
+    53                  
+    54  0127: 37        	ADDC A, @R1
+    55                  
+    56  0128: F6        	MOV @R0, A
+    57                  
+    58  0129: 18        	DEC R0
+    59                  
+    60  012A: 12 81 22  	LCALL HEX_BCD
+    61                  
+    62  012D: 08        	INC R0
+    63                  
+    64  012E: E6        	MOV A, @R0
+    65                  
+    66  012F: 12 81 04  	LCALL WRITE_HEX
+    67                  
+    68  0132: 18        	DEC R0
+    69                  
+    70  0133: 86 00     	MOV Q, @R0
+***** Bù§D 26 : NIEZNANY SYMBOL *****
+    71                  
+    72  0135: 12 81 04  	LCALL WRITE_HEX
+    73                  
+    74  0138:           STOP:
+    75                  
+    76  0138: 80 FE     	SJMP STOP

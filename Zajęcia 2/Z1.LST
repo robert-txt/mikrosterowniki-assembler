@@ -1,0 +1,59 @@
+     1  0000: 02 01 00  	LJMP START
+     2                  
+     3  0100:           	ORG 100H
+     4                  
+     5  0100:           START:	
+     6                  
+     7  0100: 12 81 0C  	LCALL LCD_CLR
+     8                  
+     9  0103:           LC1:
+    10                  
+    11  0103: 12 81 1C  	LCALL WAIT_KEY
+    12                  
+    13  0106: B4 0A 00  	CJNE A, #10, L1
+    14                  
+    15  0109:           L1:	
+    16  0109: 50 F8     	JNC LC1
+    17                  
+    18  010B: F9        	MOV R1, A
+    19                  
+    20  010C: 12 81 04  	LCALL WRITE_HEX
+    21                  
+    22                  
+    23  010F:           LC2:
+    24                  
+    25  010F: 12 81 1C  	LCALL WAIT_KEY
+    26                  
+    27  0112: B4 0A 00  	CJNE A, #10, L2
+    28                  
+    29  0115:           L2:	
+    30                  
+    31  0115: 50 F8     	JNC LC2
+    32                  
+    33  0117: FA        	MOV R2, A
+    34                  
+    35  0118: 12 81 04  	LCALL WRITE_HEX
+    36                  
+    37  011B: E9        	MOV A, R1
+    38                  
+    39  011C: C4        	SWAP A
+    40                  
+    41  011D: 4A        	ORL A, R2
+    42                  
+    43  011E: F5 64     	MOV 100, A
+    44                  
+    45  0120: 12 81 04  	LCALL WRITE_HEX
+    46                  
+    47  0123: 75 65 00  	MOV 101, #0
+    48                  
+    49  0126: 78 64     	MOV R0, #100
+    50                  	
+    51  0128: 12 81 20  	LCALL BCD_HEX
+    52                  
+    53  012B: E6        	MOV A, @R0
+    54                  
+    55  012C: 12 81 04  	LCALL WRITE_HEX
+    56                  
+    57  012F:           STOP:
+    58                  
+    59  012F: 80 FE     	SJMP STOP
