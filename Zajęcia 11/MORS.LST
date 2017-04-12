@@ -1,0 +1,69 @@
+     1  0000: 02 01 00  	LJMP	START
+     2  0100:           	ORG	100H
+     3                  
+     4  0100:           START:
+     5  0100: 12 81 0C  	LCALL LCD_CLR
+     6  0103: 7B 00     	MOV R3, #0
+     7  0105:           LOOP:
+     8  0105: 90 01 4A  	MOV DPTR, #NAPIS
+     9  0108: EB        	MOV A, R3
+    10  0109: 93        	MOVC A,@A+DPTR
+    11  010A: 60 0D     	JZ STOP	
+    12  010C: C0 E0     	PUSH ACC
+    13  010E: 12 81 02  	LCALL WRITE_DATA
+    14  0111: D0 E0     	POP ACC
+    15  0113: 12 01 1B  	LCALL MORSE
+    16  0116: 0B        	INC R3
+    17  0117: 80 EC     	SJMP LOOP
+    18                  
+    19  0119:           STOP:
+    20  0119: 80 FE     	SJMP	STOP
+    21  011B:           MORSE:
+    22                  
+    23  011B: 94 41     	SUBB A, #'A' ;ODLEG£OŒÆ W ALFABECIE
+    24  011D: 23        	RL A
+    25  011E: 90 01 4F  	MOV DPTR, #DATA_M
+    26  0121: 04        	INC A
+    27  0122: C0 E0     	PUSH ACC
+    28  0124: 93        	MOVC A, @A+DPTR
+    29  0125: F9        	MOV R1, A
+    30  0126: D0 E0     	POP ACC
+    31  0128: 14        	DEC A
+    32  0129: 93        	MOVC A, @A+DPTR
+    33  012A: FA        	MOV R2, A
+    34  012B:           LOOP1:
+    35  012B: EA        	MOV A, R2
+    36  012C: 33        	RLC A
+    37  012D: FA        	MOV R2, A
+    38  012E: C2 97     	CLR P1.7
+    39  0130: 40 04     	JC L11
+    40  0132: 74 02     	MOV A, #2
+    41  0134: 80 02     	SJMP L12
+    42  0136:           L11:
+    43  0136: 74 06     	MOV A, #6
+    44  0138:           L12:
+    45  0138: 12 81 12  	LCALL DELAY_100MS
+    46  013B: D2 97     	SETB P1.7
+    47  013D: 74 04     	MOV A, #4
+    48  013F: 12 81 12  	LCALL DELAY_100MS
+    49  0142: D9 E7     	DJNZ R1, LOOP1
+    50  0144: 74 0A     	MOV A, #10
+    51  0146: 12 81 12  	LCALL DELAY_100MS
+    52  0149: 22        	RET
+    53  014A:           NAPIS:
+    54  014A: 41 42 42  	DB 'ABBA', 0
+        014D: 41 00 
+    55                  
+    56  014F:           DATA_M:
+    57                  
+    58  014F: 40 02     	DB 01000000B, 2
+    59  0151: 80 04     	DB 10000000B, 4
+    60  0153: A0 04     	DB 10100000B, 4
+    61  0155: 80 03     	DB 10000000B, 3
+    62  0157: 00 01     	DB 00000000B, 1
+    63  0159: 20 04     	DB 00100000B, 4
+    64  015B: 80 03     	DB 10000000B, 3
+    65  015D: 00 04     	DB 00000000B, 4
+    66  015F: 00 02     	DB 00000000B, 2
+    67  0161: 70 04     	DB 01110000B, 4
+    68  0163: A0 03     	DB 10100000B, 3

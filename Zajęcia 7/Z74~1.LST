@@ -1,0 +1,53 @@
+     1  0000: 02 01 00  	LJMP	START
+     2  0100:           	ORG	100H
+     3                  
+     4  0100:           START:
+     5  0100: 12 81 0C  	LCALL LCD_CLR
+     6  0103: 7C 06     	MOV R4, #6
+     7  0105:           LOOP:
+     8                  	
+     9  0105: 7B 06     	MOV R3, #6
+    10  0107: 79 38     	MOV R1, #CSDB
+    11                  	
+    12  0109: EC        L3:	MOV A, R4
+    13  010A: 90 01 2A  	MOV DPTR, #DIG
+    14  010D: 93        	MOVC A, @A+DPTR
+    15  010E: F3        	MOVX @R1, A
+    16                  	
+    17                  
+    18  010F: 78 30     L2:	MOV R0, #CSDS
+    19  0111: 74 01     	MOV A, #00000001B
+    20  0113:           L1:
+    21  0113: D2 96     	SETB P1.6
+    22  0115: F2        	MOVX @R0, A
+    23                  
+    24  0116: C2 96     	CLR P1.6
+    25                  	
+    26  0118: 23        	RL A
+    27                  	
+    28  0119: C0 E0     	PUSH ACC
+    29  011B: 74 64     	MOV A, #100
+    30  011D: 12 81 10  	LCALL DELAY_MS
+    31  0120: D0 E0     	POP ACC
+    32                  
+    33  0122: DB EF     	DJNZ R3, L1
+    34  0124: DC E3     	DJNZ R4, L3
+    35  0126: 80 DD     	SJMP LOOP
+    36                  	
+    37                  
+    38                  
+    39                  	
+    40                  	
+    41  0128:           STOP:
+    42  0128: 80 FE     	SJMP	STOP
+    43  012A:           DIG:
+    44  012A: 3F        	DB 00111111B; KOD 0
+    45  012B: 06        	DB 00000110B; KOD 1
+    46  012C: 5B        	DB 01011011B; 2
+    47  012D: 4F        	DB 01001111B; 3
+    48  012E: 66        	DB 01100110B; 4
+    49  012F: 6D        	DB 01101101B; 5
+    50  0130: 7D        	DB 01111101B; 6
+    51  0131: 07        	DB 00000111B; 7
+    52  0132: 7F        	DB 01111111B; 8
+    53  0133: 6F        	DB 01101111B; 9

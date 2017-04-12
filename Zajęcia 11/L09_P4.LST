@@ -1,0 +1,62 @@
+     1                  ;************************************************
+     2                  ;LEKCJA   9	- WYŒWIETLACZ ALFANUMERYCZNY LCD
+     3                  ;PRZYK£AD 4	- ANIMACJA
+     4                  ;************************************************
+     5                  
+     6  0000: 02 01 00  	LJMP	START
+     7  0100:           	ORG	100H
+     8  0100:           START:
+     9                  
+    10  0100: 78 80     	MOV	R0,#LCDWC	;adres wpisu instrukcji
+    11  0102: 79 82     	MOV	R1,#LCDRC	;adres odczytu stanu
+    12                  
+    13  0104: 74 01     	MOV	A,#1		;kasuj dane wyœwietlacza
+    14  0106: 12 01 28  	LCALL	WRITE
+    15                  
+    16  0109: 74 0F     	MOV	A,#0FH		;w³¹cz wyœwietlacz,kursor
+    17  010B: 12 01 28  	LCALL	WRITE		;i mruganie kursora
+    18                  
+    19  010E: 08        	INC	R0		;adres wpisu danych
+    20  010F: 90 01 30  	MOV	DPTR,#TEXT	;adres tekstu
+    21                  
+    22  0112:           WRITE_TXT:
+    23  0112: E4        	CLR	A		;pobranie kolejnego
+    24  0113: 93        	MOVC	A,@A+DPTR	;znaku tekstu
+    25  0114: 60 05     	JZ	TEXT_END	;bajt=0 - koniec tekstu
+    26                  
+    27  0116: 31 28     	ACALL	WRITE		;wpisanie na wyœwietlacz
+    28  0118: A3        	INC	DPTR		;modyfikacja adresu
+    29                  				;pobrania kolejnego znaku
+    30  0119: 80 F7     	SJMP	WRITE_TXT	;pobierz kolejny znak
+    31                  
+    32  011B:           TEXT_END:
+    33  011B: 18        	DEC	R0		;adres wpisu instrukcji
+    34                  
+    35  011C:           LOOP:				;pêtla animacji
+    36  011C: 74 04     	MOV	A,#4
+    37  011E: 12 81 12  	LCALL	DELAY_100MS	;co 0.4 sek
+    38                  	
+    39  0121: 74 1C     	MOV	A,#00011100B	;obrót danych w lewo
+    40  0123: 12 01 28  	LCALL	WRITE		;na wyœwietlaczu LCD
+    41                  
+    42  0126: 80 F4     	SJMP	LOOP
+    43                  
+    44                  ;**************************************
+    45                  ;Podprogram wpisu danych lub instrukcji
+    46                  ;na wyœwietlacz LCD
+    47                  ;Zak³ada prawid³owe adresy w R0 i R1
+    48                  
+    49  0128:           WRITE:
+    50  0128: FA        	MOV	R2,A		;przechowanie danych
+    51  0129:           BUSY:
+    52  0129: E3        	MOVX	A,@R1		;odczytanie stanu
+    53  012A: 20 E7 FC  	JB	ACC.7,BUSY	;oczekiwanie na BUSY=0
+    54  012D: EA        	MOV	A,R2		;odtworzenie danych
+    55  012E: F2        	MOVX	@R0,A		;wys³anie danych
+    56  012F: 22        	RET
+    57                  
+    58                  ;**************************************
+    59  0130:           TEXT:
+    60  0130: 41 53 49  	DB	'ASIA ;>',0
+        0133: 41 20 3B 
+        0136: 3E 00 

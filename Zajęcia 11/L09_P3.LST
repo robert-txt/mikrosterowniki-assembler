@@ -1,0 +1,130 @@
+     1                  ;************************************************
+     2                  ;LEKCJA   9	- WYŒWIETLACZ ALFANUMERYCZNY LCD
+     3                  ;PRZYK£AD 3	- DEFINIOWANIE ZNAKU
+     4                  ;************************************************
+     5                  
+     6  0000: 02 01 00  	LJMP	START
+     7  0100:           	ORG	100H
+     8  0100:           START:
+     9                  
+    10  0100: 78 80     	MOV	R0,#LCDWC	;adres wpisu instrukcji
+    11  0102: 79 82     	MOV	R1,#LCDRC	;adres odczytu stanu
+    12                  
+    13  0104: 74 48     	MOV	A,#48H		;ustaw adres generatora
+    14  0106: 12 01 5E  	LCALL	WRITE		;znaków dla znaku 1
+    15                  
+    16                  
+    17  0109: 08        	INC	R0		;adres wpisu danych
+    18  010A: 90 01 66  	MOV	DPTR,#LITERA ;adres definicji litery
+    19  010D: 7B 08     	MOV	R3,#8		;licznik bajtów definicji
+    20                  
+    21                  	
+    22  010F:           LOOP:				;wpisz definicjê litery
+    23                  				;do generatora znaków LCD
+    24  010F: E4        	CLR	A
+    25  0110: 93        	MOVC	A,@A+DPTR	;odczyt kolejnego bajtu
+    26  0111: 12 01 5E  	LCALL	WRITE		;zapis do generatora zn.
+    27  0114: A3        	INC	DPTR		;modyfikacja adresu
+    28  0115: DB F8     	DJNZ	R3,LOOP		;przepisanie 8 bajtów
+    29                  
+    30  0117: 18        	DEC	R0		;adres wpisu instrukcji
+    31                  
+    32  0118: 74 01     	MOV	A,#1		;kasuj dane wyœwietlacza
+    33  011A: 12 01 5E  	LCALL	WRITE
+    34                  
+    35  011D: 74 0F     	MOV	A,#0FH		;w³¹cz wyœwietlacz,kursor
+    36  011F: 12 01 5E  	LCALL	WRITE		;i mruganie kursora
+    37                  
+    38  0122: 74 06     	MOV	A,#06H		;ustaw kierunek przesuwu
+    39  0124: 12 01 5E  	LCALL	WRITE		;kursora
+    40                  
+    41  0127: 08        	INC	R0		;adres wpisu danych
+    42  0128: 90 01 76  	MOV	DPTR,#TEXT	;adres tekstu do
+    43                  				;wyœwietlenia na LCD
+    44                  
+    45  012B: 74 50     	MOV	A,#50H		;ustaw adres generatora
+    46  012D: 12 01 5E  	LCALL	WRITE
+    47                  
+    48  0130: 08        	INC	R0		;adres wpisu danych
+    49  0131: 90 01 6E  	MOV	DPTR,#LITERA2 ;adres definicji litery
+    50  0134: 7B 08     	MOV	R3,#8
+    51                  
+    52  0136:           LOOP2:				;wpisz definicjê litery
+    53                  				;do generatora znaków LCD
+    54  0136: E4        	CLR	A
+    55  0137: 93        	MOVC	A,@A+DPTR	;odczyt kolejnego bajtu
+    56  0138: 12 01 5E  	LCALL	WRITE		;zapis do generatora zn.
+    57  013B: A3        	INC	DPTR		;modyfikacja adresu
+    58  013C: DB F8     	DJNZ	R3,LOOP2		;przepisanie 8 bajtów
+    59                  
+    60  013E: 18        	DEC	R0		;adres wpisu instrukcji
+    61                  
+    62  013F: 74 01     	MOV	A,#1		;kasuj dane wyœwietlacza
+    63  0141: 12 01 5E  	LCALL	WRITE
+    64                  
+    65  0144: 74 0F     	MOV	A,#0FH		;w³¹cz wyœwietlacz,kursor
+    66  0146: 12 01 5E  	LCALL	WRITE		;i mruganie kursora
+    67                  
+    68  0149: 74 06     	MOV	A,#06H		;ustaw kierunek przesuwu
+    69  014B: 12 01 5E  	LCALL	WRITE		;kursora
+    70                  
+    71  014E: 08        	INC	R0		;adres wpisu danych
+    72  014F: 90 01 76  	MOV	DPTR,#TEXT	;adres tekstu do
+    73                  				;wyœwietlenia na LCD
+    74                  
+    75                  
+    76                  
+    77  0152:           WRITE_TXT:			;wpisz tekst na LCD
+    78  0152: E4        	CLR	A
+    79  0153: 93        	MOVC	A,@A+DPTR	;pobranie znaku tekstu
+    80  0154: 60 06     	JZ	TEXT_END	;bajt=0 - koniec tekstu
+    81  0156: 12 01 5E  	LCALL	WRITE		;wpis na wyœwietlacz
+    82  0159: A3        	INC	DPTR		;modyfikacja adresu
+    83  015A: 80 F6     	SJMP	WRITE_TXT	;wpisz kolejny znak
+    84                  
+    85  015C:           TEXT_END:
+    86  015C: 80 FE     	SJMP	$		;koniec programu
+    87                  
+    88                  ;**************************************
+    89                  ;Podprogram wpisu danych lub instrukcji
+    90                  ;na wyœwietlacz LCD
+    91                  ;Zak³ada prawid³owe adresy w R0 i R1
+    92                  
+    93  015E:           WRITE:
+    94  015E: FA        	MOV	R2,A		;przechowanie danych
+    95  015F:           BUSY:
+    96  015F: E3        	MOVX	A,@R1		;odczytanie stanu
+    97  0160: 20 E7 FC  	JB	ACC.7,BUSY	;oczekiwanie na BUSY=0
+    98  0163: EA        	MOV	A,R2		;odtworzenie danych
+    99  0164: F2        	MOVX	@R0,A		;wys³anie danych
+   100  0165: 22        	RET
+   101                  
+   102                  ;**************************************
+   103                  ;Tabela bajtów definiuj¹cych literê 'ñ'
+   104  0166:           LITERA:
+   105  0166: 1F        	DB	00011111B
+   106  0167: 18        	DB	00011000B
+   107  0168: 1F        	DB	00011111B
+   108  0169: 1F        	DB	00011111B
+   109  016A: 18        	DB	00011000B
+   110  016B: 1F        	DB	00011111B
+   111  016C: 1F        	DB	00011111B
+   112  016D: 00        	DB	00000000B
+   113                  
+   114  016E:           LITERA2:
+   115  016E: 04        	DB	00000100B
+   116  016F: 04        	DB	00000100B
+   117  0170: 1F        	DB	00011111B
+   118  0171: 04        	DB	00000100B
+   119  0172: 04        	DB	00000100B
+   120  0173: 04        	DB	00000100B
+   121  0174: 00        	DB	00000000B
+   122  0175: 00        	DB	00000000B
+   123                  
+   124                  ;**************************************
+   125  0176:           TEXT:
+   126  0176: 47 64 61  	DB	'Gdansk  '
+        0179: 6E 73 6B 
+        017C: 20 20 
+   127  017E: 01 02 00  	DB	1,2,0
+   128                  

@@ -1,0 +1,59 @@
+     1                  
+     2  0000: 02 01 00  	LJMP	START
+     3  0100:           	ORG	100H
+     4  0100:           START:
+     5  0100: 74 80     	MOV A, #10000000B
+     6  0102: 78 2B     	MOV R0, #CS55D
+     7  0104: F2        	MOVX @R0, A
+     8  0105: 74 FF     	MOV A, #11111111B
+     9  0107: 78 28     	MOV R0, #CS55A
+    10  0109: F2        	MOVX @R0, A
+    11  010A: 12 81 0C  	LCALL LCD_CLR
+    12                  	
+    13                  
+    14  010D:           LOOP:
+    15  010D: 79 08     	MOV R1, #8	
+    16                  
+    17                  	
+    18  010F:           LOOP2:	
+    19  010F: 90 01 29  	MOV DPTR, #SYGNALIZACJA
+    20  0112: E9        	MOV A, R1
+    21  0113: 14        	DEC A
+    22  0114: 93        	MOVC A, @A+DPTR
+    23  0115: F4        	CPL A
+    24  0116: 78 29     	MOV R0, #CS55B
+    25  0118: F2        	MOVX @R0, A
+    26  0119: 12 81 04  	LCALL WRITE_HEX
+    27                  
+    28  011C: 90 01 31  	MOV DPTR, #CZAS
+    29  011F: E9        	MOV A, R1
+    30  0120: 14        	DEC A
+    31  0121: 93        	MOVC A, @A+DPTR
+    32  0122: 12 81 12  	LCALL DELAY_100MS
+    33                  	
+    34  0125: D9 E8     	DJNZ R1, LOOP2
+    35                  	
+    36                  	
+    37                  
+    38  0127: 80 E4     	SJMP	LOOP
+    39                  
+    40  0129:           SYGNALIZACJA:
+    41                  
+    42  0129: 0C        	DB 00001100B
+    43  012A: 0A        	DB 00001010B
+    44  012B: 09        	DB 00001001B
+    45  012C: 19        	DB 00011001B
+    46  012D: 21        	DB 00100001B
+    47  012E: 11        	DB 00010001B
+    48  012F: 09        	DB 00001001B
+    49  0130: 0B        	DB 00001011B
+    50                  
+    51  0131:           CZAS:
+    52  0131: 32        	DB 50
+    53  0132: 14        	DB 20
+    54  0133: 05        	DB 5
+    55  0134: 0A        	DB 10
+    56  0135: 32        	DB 50
+    57  0136: 14        	DB 20
+    58  0137: 05        	DB 5
+    59  0138: 0A        	DB 10

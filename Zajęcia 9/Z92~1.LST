@@ -1,0 +1,46 @@
+     1  0000: 02 01 00  	LJMP	START
+     2  0100:           	ORG	100H
+     3                  
+     4  0100:           START:
+     5  0100: 12 81 0C  	LCALL LCD_CLR
+     6                  
+     7  0103: 75 98 40  	MOV SCON, #1*64+0*16
+     8  0106: 43 87 80  	ORL PCON, #80H
+     9  0109: 75 89 20  	MOV TMOD, #(0+0*4+0*8)+(2+0*4+0*8)*16
+    10  010C: 75 8D 40  	MOV TH1, #256-192
+    11  010F: 75 8B 40  	MOV TL1, #256-192
+    12  0112: D2 8E     	SETB TR1
+    13                  	
+    14  0114: D2 99     	SETB TI
+    15  0116: 12 81 0C  	LCALL LCD_CLR
+    16                  
+    17                  	
+    18                  	
+    19  0119:           LOOP:
+    20  0119: 12 81 18  	LCALL TEST_ENTER
+    21  011C: 30 97 10  	JNB P1.7, L1
+    22  011F: 30 98 FD  	JNB RI,$
+    23  0122: C2 98     	CLR RI
+    24  0124: 40 07     	JC L2
+    25  0126: E5 99     	MOV A, SBUF
+    26  0128: 12 81 12  	LCALL DELAY_100MS
+    27  012B: C2 97     	CLR P1.7
+    28  012D:           L2:
+    29  012D: 80 10     	SJMP L5
+    30                  
+    31  012F:           L1:
+    32                  	
+    33  012F: 30 99 FD  	JNB TI, $
+    34  0132: C2 99     	CLR TI
+    35  0134: 12 81 1C  	LCALL WAIT_KEY
+    36                  
+    37  0137: B5 0F 00  	CJNE A,0FH, L4
+    38                  
+    39  013A:           L4:
+    40  013A: F5 99     	MOV SBUF, A
+    41  013C: 12 81 02  	LCALL WRITE_DATA
+    42                   
+    43  013F:           L5:
+    44  013F: 80 D8     	SJMP LOOP
+    45                  
+    46                  

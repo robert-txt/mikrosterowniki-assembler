@@ -1,0 +1,21 @@
+     1  0000: 02 01 00  	LJMP	START
+     2  0100:           	ORG	100H
+     3                  
+     4  0100:           START:
+     5  0100: 12 81 0C  	LCALL LCD_CLR
+     6                  
+     7  0103: 12 81 1C  	LCALL WAIT_KEY
+     8  0106: 75 F0 02  	MOV B, #2
+     9  0109: A4        	MUL AB
+    10  010A: F9        	MOV R1, A
+    11  010B: C2 97     	CLR P1.7
+    12                  	
+    13  010D:           LOOP:
+    14  010D: 78 E4     	MOV R0, #228
+    15  010F: D8 FE     	DJNZ R0, $
+    16  0111: D9 FA     	DJNZ R1, LOOP
+    17                  
+    18  0113: B2 97     	CPL P1.7
+    19                  
+    20  0115:           STOP:
+    21  0115: 80 FE     	SJMP	STOP

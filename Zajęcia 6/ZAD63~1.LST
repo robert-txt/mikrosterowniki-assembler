@@ -1,0 +1,22 @@
+     1  0000: 02 01 00  	LJMP	START
+     2  0100:           	ORG	100H
+     3                  
+     4  0100:           START:
+     5  0100: 12 81 0C  	LCALL LCD_CLR
+     6                  
+     7  0103: 75 89 50  	MOV TMOD, #01010000B	;GATE 0, C/T 1, TRYB 1
+     8                  
+     9  0106: 75 8D 00  	MOV TH1, #0
+    10  0109: 75 8B 00  	MOV TL1, #0
+    11  010C: 78 30     	MOV R0, #CSDS
+    12  010E: 74 3F     	MOV A, #00111111B
+    13  0110: F2        	MOVX @R0, A
+    14  0111: D2 8E     	SETB TR1
+    15  0113:           LOOP:
+    16  0113: 74 0A     	MOV A, #10
+    17  0115: 12 81 12  	LCALL DELAY_100MS
+    18  0118: E5 8B     	MOV A, TL1
+    19  011A: 12 81 04  	LCALL WRITE_HEX
+    20                  	
+    21                  	
+    22  011D: 80 F4     	SJMP	LOOP

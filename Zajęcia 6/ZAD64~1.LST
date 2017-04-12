@@ -1,0 +1,33 @@
+     1  0000: 02 01 00  	LJMP	START
+     2  0100:           	ORG	100H
+     3                  
+     4  0100:           START:
+     5  0100: 12 81 0C  	LCALL LCD_CLR
+     6                  
+     7  0103: 78 30     	MOV R0, #CSDS
+     8  0105: 74 3F     	MOV A, #00111111B
+     9  0107: F2        	MOVX @R0,A	
+    10  0108: C2 8D     	CLR TF0
+    11  010A: 75 89 01  	MOV TMOD, #00000001B	;GATE 0, CZAS WEWNÊTRZNY, TRYB 1
+    12  010D: 75 8A 00  	MOV TL0, #0
+    13  0110:           L3:
+    14  0110: C3        	CLR C
+    15  0111: 79 64     	MOV R1, #100
+    16  0113:           L0:
+    17  0113: 75 8C 4C  	MOV TH0, #256-180
+    18  0116: D2 8C     	SETB TR0
+    19  0118:           L1:
+    20  0118: 30 B5 01  	JNB P3.5, L2
+    21  011B: D3        	SETB C
+    22  011C:           L2:
+    23  011C: 30 8D F9  	JNB TF0,L1
+    24  011F: C2 8D     	CLR TF0
+    25  0121: C2 8C     	CLR TR0
+    26  0123: D9 EE     	DJNZ R1, L0
+    27  0125: 40 E9     	JC L3
+    28  0127: C2 97     	CLR P1.7
+    29                  	
+    30  0129:           STOP:
+    31  0129: 80 FE     	SJMP	STOP
+    32                  
+    33                  
